@@ -5,7 +5,7 @@
     "require": {
         "symfony/validator": "^7.2"
     },
-    "license": "MIT License",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "OmgFinally\\SymfonyValidationConstraints\\": "src/"

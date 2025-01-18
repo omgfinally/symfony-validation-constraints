@@ -1,0 +1,23 @@
+{
+    "name": "omgfinally/symfony-validation-constraints",
+    "description": "Finally a couple more of custom validation constraints for Symfony.",
+    "type": "library",
+    "require": {
+        "symfony/validator": "^7.2"
+    },
+    "license": "MIT License",
+    "autoload": {
+        "psr-4": {
+            "OmgFinally\\SymfonyValidationConstraints\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Kevin Kopf",
+            "email": "kevin.k.kopf@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^11"
+    }
+}

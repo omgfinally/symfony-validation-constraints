@@ -16,14 +16,28 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Author
 {
-    #[OmgFinallyAssert\EachElement(new Assert\Type('int'))]
+    // Checks if every element of $numbers is `int`.
+    #[OmgFinallyAssert\EachElement(subConstraints: new Assert\Type('int'))]
     protected array $numbers;
 
-    #[OmgFinallyAssert\EachElement([
-      new Assert\Type('int'),
-      new Positive()
-    ])]
-    protected array $characters;
+    // Checks if every element of $incomes is both `int` and is positive (above zero).
+    #[OmgFinallyAssert\EachElement(
+        subConstraints: [
+            new Assert\Type('int'),
+            new Positive()
+        ]
+    )]
+    protected array $incomes;
+
+    // Checks if every element of $books is either `int` or `string`.
+    #[OmgFinallyAssert\EachElement(
+        subConstraints: [
+            new Assert\Type('int'),
+            new Assert\Type('string'),
+        ],
+        logicalOperator: 'or'
+    )]
+    protected array $books;
 }
 ```
 ### Options
@@ -36,6 +50,19 @@ See [official Symfony documentation](https://symfony.com/doc/current/reference/c
 
 ##### `message`
 **type:** `string` **default:** `One or more of the elements of your array did not meet the constraint criteria.`
+
+##### `logicalOperator`
+**type:** `string` **default:** `and`
+
+The logical operator to use when comparing the validation results of passed constraints.
+
+The list of available values you may use:
+
+| `logicalOperator` | Description                                                                                                              | `subConstraints` type   |
+|-------------------|--------------------------------------------------------------------------------------------------------------------------|-------------------------|
+| `and` (default)   | Uses the `&&` operator internally.                                                                                       | `array`                 |
+| `or`              | Uses the `\|\|` operator internally.                                                                                     | `array`                 |
+| `not`             | Uses the `!` operator internally. If you're validating with an array of constraints, each validation result should fail. | `array` \| `Constraint` |
 
 ##### `groups`
 **type:** `array` | `string` **default:** `null`

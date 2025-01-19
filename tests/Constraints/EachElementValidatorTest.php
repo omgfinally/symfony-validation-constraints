@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace OmgFinally\SymfonyValidationConstraints\Test\Constraints;
+namespace Constraints;
 
 use OmgFinally\SymfonyValidationConstraints\Constraints\EachElement;
 use OmgFinally\SymfonyValidationConstraints\Constraints\EachElementValidator;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Positive;
+use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\ConstraintValidatorInterface;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Exception\UnexpectedValueException;
@@ -29,12 +31,12 @@ class EachElementValidatorTest extends ConstraintValidatorTestCase
     public function testUnexpectedValueException(): void
     {
         $this->expectException(UnexpectedValueException::class);
-        $this->validator->validate('array', new EachElement('numeric'));
+        $this->validator->validate('array', new EachElement([]));
     }
 
     public function testIntConstraintSuccess(): void
     {
-        $constraint = new EachElement('int');
+        $constraint = new EachElement(new Type('int'));
         $array = [1, 2, 3];
 
         $this->validator->validate($array, $constraint);
@@ -43,62 +45,26 @@ class EachElementValidatorTest extends ConstraintValidatorTestCase
 
     public function testIntConstraintFail(): void
     {
-        $constraint = new EachElement('int');
+        $constraint = new EachElement(new Type('int'));
         $array = [1, 2, '3'];
         $validator = Validation::createValidator();
         $violations = $validator->validate($array, $constraint);
         $this->assertCount(1, $violations, \sprintf('1 violation expected. Got %u.', \count($violations)));
     }
 
-    public function testNumericConstraintSuccess(): void
+    public function testPositiveIntConstraintSuccess(): void
     {
-        $constraint = new EachElement('numeric');
-        $array = [1, 2, 3, '10'];
+        $constraint = new EachElement([new Type('int'), new Positive()]);
+        $array = [1, 2, 3];
 
         $this->validator->validate($array, $constraint);
         $this->assertNoViolation();
     }
 
-    public function testNumericConstraintFail(): void
+    public function testPositiveIntConstraintFail(): void
     {
-        $constraint = new EachElement('numeric');
-        $array = [1, 2, 3, 'a'];
-        $validator = Validation::createValidator();
-        $violations = $validator->validate($array, $constraint);
-        $this->assertCount(1, $violations, \sprintf('1 violation expected. Got %u.', \count($violations)));
-    }
-
-    public function testAlphaConstraintSuccess(): void
-    {
-        $constraint = new EachElement('alpha');
-        $array = ['a', 'b', 'c'];
-
-        $this->validator->validate($array, $constraint);
-        $this->assertNoViolation();
-    }
-
-    public function testAlphaConstraintFail(): void
-    {
-        $constraint = new EachElement('alpha');
-        $array = ['a', 'b', 'c', 1];
-        $validator = Validation::createValidator();
-        $violations = $validator->validate($array, $constraint);
-        $this->assertCount(1, $violations, \sprintf('1 violation expected. Got %u.', \count($violations)));
-    }
-
-    public function testAlphaNumericConstraintSuccess(): void
-    {
-        $constraint = new EachElement('alnum');
-        $array = ['a', 'b', 'c', 1, 2, 3, '10'];
-
-        $this->validator->validate($array, $constraint);
-        $this->assertNoViolation();
-    }
-
-    public function testAlphaNumericConstraintFail(): void
-    {
-        $constraint = new EachElement('alnum');
-        $array = ['a', 'b', 'c', []];
+        $constraint = new EachElement([new Type('int'), new Positive()]);
+        $array = [-10, 1, 2, 3];
         $validator = Validation::createValidator();
         $violations = $validator->validate($array, $constraint);
         $this->assertCount(1, $violations, \sprintf('1 violation expected. Got %u.', \count($violations)));

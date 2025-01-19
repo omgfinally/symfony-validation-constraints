@@ -19,35 +19,30 @@ class EachElementValidator extends ConstraintValidator
             throw new UnexpectedValueException($value, 'array');
         }
 
-        if ('int' === $constraint->method && $this->validateElements($value, function(mixed $v) {return is_int($v);})) {
-            return;
+        if (
+            false === is_array($constraint->subConstraints)
+            && !$constraint->subConstraints instanceof Constraint
+        ) {
+            throw new UnexpectedValueException($value, 'array or Constraint');
         }
 
-        if ('numeric' === $constraint->method && $this->validateElements($value, function(mixed $v) {return is_numeric($v);})) {
-            return;
+        if (is_array($constraint->subConstraints)) {
+            foreach($constraint->subConstraints as $subConstraint) {
+                $this->runChecks($value, $subConstraint);
+            }
+        } else {
+            $this->runChecks($value, $constraint->subConstraints);
         }
-
-        if ('alpha' === $constraint->method && $this->validateElements($value, function(mixed $v) {return ctype_alpha($v);})) {
-            return;
-        }
-
-        if ('alnum' === $constraint->method && $this->validateElements($value, function(mixed $v) {return ctype_alpha($v) || is_numeric($v);})) {
-            return;
-        }
-
-        $this->context
-            ->buildViolation($constraint->message)
-            ->addViolation();
     }
 
-    private function validateElements(array $elements, callable $method): bool
+    private function runChecks(mixed $value, Constraint $constraint): void
     {
-        foreach($elements as $element) {
-            if (!$method($element)) {
-                return false;
-            }
-        }
+        $validatorClassname = $constraint->validatedBy();
+        $validator = new $validatorClassname();
+        $validator->initialize($this->context);
 
-        return true;
+        foreach($value as $el) {
+            $validator->validate($el, $constraint);
+        }
     }
 }

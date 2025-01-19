@@ -8,8 +8,8 @@ use Symfony\Component\Validator\Constraint;
 class EachElement extends Constraint
 {
     public function __construct(
-        public string $method,
-        public string $message = "One of the elements of your array did not meet the constraint criteria",
+        public array|Constraint $subConstraints,
+        public string $message = "One of the elements of your array did not meet the constraint criteria.",
         ?array $groups = null,
         $payload = null
     )

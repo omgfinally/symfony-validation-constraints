@@ -3,7 +3,8 @@
     "description": "Finally a couple more of custom validation constraints for Symfony.",
     "type": "library",
     "require": {
-        "symfony/validator": "^7.2"
+        "symfony/validator": "^7.2",
+        "symfony/dependency-injection": "^7.2"
     },
     "license": "MIT",
     "autoload": {

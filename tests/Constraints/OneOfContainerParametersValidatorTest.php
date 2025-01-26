@@ -9,6 +9,7 @@ use OmgFinally\SymfonyValidationConstraints\Constraints\EachElementValidator;
 use OmgFinally\SymfonyValidationConstraints\Constraints\OneOfContainerParameters;
 use OmgFinally\SymfonyValidationConstraints\Constraints\OneOfContainerParametersValidator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
 use Symfony\Component\Validator\Constraints\Type;
@@ -45,7 +46,7 @@ class OneOfContainerParametersValidatorTest extends ConstraintValidatorTestCase
     public function testUnexpectedParameterException(): void
     {
         $this->expectException(UnexpectedValueException::class);
-        $this->validator->validate('array', new OneOfContainerParameters('string'));
+        $this->validator->validate('one', new OneOfContainerParameters('invalid'));
     }
 
     public function testOneOfContainerParametersIntSuccess(): void

@@ -1,10 +1,11 @@
 {
     "name": "omgfinally/symfony-validation-constraints",
     "description": "Finally a couple more of custom validation constraints for Symfony.",
-    "type": "library",
+    "type": "symfony-bundle",
     "require": {
         "symfony/validator": "^7.2",
-        "symfony/dependency-injection": "^7.2"
+        "symfony/dependency-injection": "^7.2",
+        "symfony/http-kernel": "^7.2"
     },
     "license": "MIT",
     "autoload": {
